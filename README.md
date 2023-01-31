@@ -26,3 +26,5 @@ It's a simple 8 switch keypad. In my use case it's used for Light Button, Call D
 - Add the Automations to your HA configs. You'll need to copy them one by one from [automations.yaml](automations.yaml)
 - You'll need to figure out your baby's entity ID number/name from HA for the automations to log correctly, and decide what notes will be helpful, and change the YAML as needed. You can figure this out by making a test service call from the HA developer section and see what the YAML shows you for entity_id
 - Restart Home Assistant and you should be able to log data right away. 
+
+#### Original Project by [Gabe](https://github.com/sfgabe) is [HERE](https://github.com/sfgabe/OITProjects/tree/master/Baby_Buddy_Keypad) ####
