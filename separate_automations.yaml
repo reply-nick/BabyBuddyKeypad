@@ -1,0 +1,115 @@
+alias: Baby Buddy Conbined
+description: Baby keypad controls for sleep tracking, diaper changes, and station light
+triggers:
+  - event_type: esphome.keypad_2x4_b1
+    event_data:
+      title: single_click
+    id: diaper_wet
+    trigger: event
+  - event_type: esphome.keypad_2x4_b2
+    event_data:
+      title: single_click
+    id: diaper_solid
+    trigger: event
+  - event_type: esphome.keypad_2x4_b3
+    event_data:
+      title: single_click
+    id: sleep_start
+    trigger: event
+  - event_type: esphome.keypad_2x4_b4
+    event_data:
+      title: single_click
+    id: sleep_add_from_timer
+    trigger: event
+  - event_type: esphome.keypad_2x4_b5
+    event_data:
+      title: single_click
+    id: diaper_wet_solid
+    trigger: event
+  - event_type: esphome.keypad_2x4_b8
+    event_data:
+      title: single_click
+    id: change_station_light
+    trigger: event
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: sleep_start
+        sequence:
+          - data:
+              name: Sleep Timer
+            target:
+              entity_id: switch.{{ baby_name }}_timer
+            action: babybuddy.start_timer
+          - device_id: bf4bee2885341428dfc1eb0900dd52e2
+            domain: light
+            entity_id: light.keypad_white_led
+            type: flash
+      - conditions:
+          - condition: trigger
+            id: sleep_add_from_timer
+        sequence:
+          - data:
+              timer: true
+            target:
+              entity_id: switch.{{ baby_name }}_timer
+            action: babybuddy.add_sleep
+          - device_id: bf4bee2885341428dfc1eb0900dd52e2
+            domain: light
+            entity_id: light.keypad_white_led
+            type: flash
+      - conditions:
+          - condition: trigger
+            id: diaper_wet
+        sequence:
+          - data:
+              type: Wet
+              notes: From Keypad
+            target:
+              entity_id: sensor.baby_{{ baby_name }}
+            action: babybuddy.add_diaper_change
+          - device_id: bf4bee2885341428dfc1eb0900dd52e2
+            domain: light
+            entity_id: light.keypad_white_led
+            type: flash
+      - conditions:
+          - condition: trigger
+            id: diaper_solid
+        sequence:
+          - data:
+              type: Solid
+              notes: From Keypad
+            target:
+              entity_id: sensor.baby_{{ baby_name }}
+            action: babybuddy.add_diaper_change
+          - device_id: bf4bee2885341428dfc1eb0900dd52e2
+            domain: light
+            entity_id: light.keypad_white_led
+            type: flash
+      - conditions:
+          - condition: trigger
+            id: diaper_wet_solid
+        sequence:
+          - data:
+              type: Wet and Solid
+              notes: From Keypad
+            target:
+              entity_id: sensor.baby_{{ baby_name }}
+            action: babybuddy.add_diaper_change
+          - device_id: bf4bee2885341428dfc1eb0900dd52e2
+            domain: light
+            entity_id: light.keypad_white_led
+            type: flash
+      - conditions:
+          - condition: trigger
+            id: change_station_light
+        sequence:
+          - type: toggle
+            device_id: 7ef87f6924c797e75020341fe1d2b21c
+            entity_id: switch.brown_lamp
+            domain: switch
+mode: single
+variables:
+  baby_name: emma
